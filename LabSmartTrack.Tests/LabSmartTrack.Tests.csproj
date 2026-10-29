@@ -18,4 +18,8 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\LabSmartTrack.Api\LabSmartTrack.Api.csproj" />
+  </ItemGroup>
+
 </Project>
