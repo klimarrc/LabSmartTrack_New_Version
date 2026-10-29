@@ -30,20 +30,20 @@ As a developer, I want to create the initial .NET and Angular foundation so that
 
 ### .NET Solution
 
-- [ ] Create the `LabSmartTrack` .NET solution.
-- [ ] Create the `LabSmartTrack.Api` ASP.NET Core Web API project.
-- [ ] Create the `LabSmartTrack.Tests` xUnit project.
-- [ ] Add both projects to the solution.
-- [ ] Add a project reference from the test project to the API project.
-- [ ] Create an appropriate `.gitignore` file.
+- [X] Create the `LabSmartTrack` .NET solution.
+- [X] Create the `LabSmartTrack.Api` ASP.NET Core Web API project.
+- [X] Create the `LabSmartTrack.Tests` xUnit project.
+- [X] Add both projects to the solution.
+- [X] Add a project reference from the test project to the API project.
+- [X] Create an appropriate `.gitignore` file.
 
 ### ASP.NET Core API
 
-- [ ] Confirm that the Web API starts successfully.
-- [ ] Create a health-check endpoint.
-- [ ] Return a successful JSON response from the health-check endpoint.
-- [ ] Enable controllers in `Program.cs`.
-- [ ] Configure development CORS for the Angular application.
+- [X] Confirm that the Web API starts successfully.
+- [X] Create a health-check endpoint.
+- [X] Return a successful JSON response from the health-check endpoint.
+- [X] Enable controllers in `Program.cs`.
+- [X] Configure development CORS for the Angular application.
 
 ### Angular Application
 
