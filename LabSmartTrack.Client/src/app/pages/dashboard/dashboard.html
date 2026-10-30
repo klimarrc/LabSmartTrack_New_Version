@@ -4,6 +4,26 @@
     <h1>Colony overview</h1>
     <p>A focused view of your active breeding colony and scheduled follow-ups.</p>
   </div>
+  <section
+    class="api-status"
+    [class.online]="apiStatus() === 'online'"
+    [class.offline]="apiStatus() === 'offline'"
+    [class.checking]="apiStatus() === 'checking'"
+    aria-live="polite"
+    >
+    <span class="api-status-dot" aria-hidden="true"></span>
+
+    <div>
+        <strong>API status</strong>
+        <p>{{ apiMessage() }}</p>
+    </div>
+
+    @if (apiStatus() === 'offline') {
+        <button type="button" (click)="checkApiHealth()">
+        Try again
+        </button>
+    }
+</section>
 
   <button class="primary-button" type="button">
     <span aria-hidden="true">＋</span> Create breeding pair
