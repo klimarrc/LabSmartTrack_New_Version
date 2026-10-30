@@ -1,12 +1,16 @@
-// LabSmartTrack.Api/Program.cs
 const string AngularDevelopmentPolicy =
     "AngularDevelopmentPolicy";
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Controller services
 builder.Services.AddControllers();
 
+// Swagger/OpenAPI services
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+// Allow requests from the Angular development server.
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(
@@ -20,19 +24,19 @@ builder.Services.AddCors(options =>
         });
 });
 
-builder.Services.AddOpenApi();
-
 var app = builder.Build();
 
+// Enable Swagger only in the development environment.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
 
 app.UseCors(AngularDevelopmentPolicy);
-// Configure the HTTP request pipeline.
+
 app.MapControllers();
 
 app.Run();

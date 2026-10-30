@@ -7,13 +7,21 @@ namespace LabSmartTrack.Api.Controllers;
 public class HealthController : ControllerBase
 {
     [HttpGet]
-    public IActionResult GetHealth()
+
+    [ProducesResponseType(typeof(HealthResponse), StatusCodes.Status200OK)]
+    public ActionResult<HealthResponse> GetHealth()
     {
-        return Ok(new
-        {
-            status = "healthy",
-            service = "LabSmartTrack.Api",
-            timestampUtc = DateTime.UtcNow
-        });
+        return Ok(new HealthResponse(
+            Status: "Healthy",
+            Application: "LabSmartTrack.Api",
+            TimestampUtc: DateTime.UtcNow
+        ));
     }
 }
+    
+
+public record HealthResponse(
+    string Status,
+    string Application,
+    DateTime TimestampUtc
+);
