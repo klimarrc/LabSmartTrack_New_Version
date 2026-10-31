@@ -6,11 +6,14 @@ const string AngularDevelopmentPolicy =
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Controllers
 builder.Services.AddControllers();
 
-var connectionString = builder.Configuration.GetConnectionString(
-    "LabSmartTrackDatabase"
-);
+// SQL Server and Entity Framework Core
+var connectionString =
+    builder.Configuration.GetConnectionString(
+        "LabSmartTrackDatabase"
+    );
 
 if (string.IsNullOrWhiteSpace(connectionString))
 {
@@ -24,9 +27,11 @@ builder.Services.AddDbContext<LabSmartTrackDbContext>(
         options.UseSqlServer(connectionString)
 );
 
+// Swagger/OpenAPI
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Angular development CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(
@@ -42,6 +47,7 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+// Swagger is available during development.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -50,10 +56,17 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors(AngularDevelopmentPolicy);
 
+// Redirect the API root to Swagger.
+app.MapGet(
+    "/",
+    () => Results.Redirect("/swagger")
+);
+
 app.MapControllers();
 
 app.Run();
 
+// Required by the integration test project.
 public partial class Program
 {
 }
