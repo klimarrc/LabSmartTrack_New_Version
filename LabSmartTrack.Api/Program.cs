@@ -1,16 +1,32 @@
+using LabSmartTrack.Api.Data;
+using Microsoft.EntityFrameworkCore;
+
 const string AngularDevelopmentPolicy =
     "AngularDevelopmentPolicy";
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Controller services
 builder.Services.AddControllers();
 
-// Swagger/OpenAPI services
+var connectionString = builder.Configuration.GetConnectionString(
+    "LabSmartTrackDatabase"
+);
+
+if (string.IsNullOrWhiteSpace(connectionString))
+{
+    throw new InvalidOperationException(
+        "Connection string 'LabSmartTrackDatabase' was not found."
+    );
+}
+
+builder.Services.AddDbContext<LabSmartTrackDbContext>(
+    options =>
+        options.UseSqlServer(connectionString)
+);
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Allow requests from the Angular development server.
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(
@@ -26,14 +42,11 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Enable Swagger only in the development environment.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-app.UseHttpsRedirection();
 
 app.UseCors(AngularDevelopmentPolicy);
 
