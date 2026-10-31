@@ -2,9 +2,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace LabSmartTrack.Api.Models;
 
-public sealed class Cage
+public sealed class Cage : AuditableEntity
 {
-    public int Id { get; set; }
 
     [Required]
     [MaxLength(50)]

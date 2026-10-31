@@ -2,9 +2,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace LabSmartTrack.Api.Models;
 
-public sealed class Rack
+public sealed class Rack : AuditableEntity
 {
-    public int Id { get; set; }
 
     [Required]
     [MaxLength(100)]
