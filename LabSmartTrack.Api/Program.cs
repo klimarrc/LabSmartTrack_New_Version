@@ -66,7 +66,7 @@ app.MapControllers();
 
 app.Run();
 
-// Required by the integration test project.
+// Allows the test project to access Program.
 public partial class Program
 {
 }
