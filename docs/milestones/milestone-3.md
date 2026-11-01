@@ -38,7 +38,6 @@ Rack    Room
 Cage    Rack
 Mouse  Cage and Strain
 
-
 ## 4. Delete workflow
 
 - [ ] Request confirmation before deletion.
