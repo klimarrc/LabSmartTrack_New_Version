@@ -9,9 +9,14 @@ public sealed class Room
     [MaxLength(100)]
     public string Name { get; set; } = string.Empty;
 
-    public int FacilityId { get; set; }
+    [Required]
+    [MaxLength(50)]
+    public string RoomNumber { get; set; } = string.Empty;
 
-    public Facility Facility { get; set; } = null!;
+    // Foreign key to the Facility entity
+    public int FacilityId { get; set; }
+    // Optional in the API request
+    public Facility? Facility { get; set; }
 
     public ICollection<Rack> Racks { get; set; } =
         new List<Rack>();

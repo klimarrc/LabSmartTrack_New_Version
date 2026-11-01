@@ -4,6 +4,11 @@ namespace LabSmartTrack.Api.Models;
 
 public sealed class Cage : AuditableEntity
 {
+    
+    [Required]
+    [MaxLength(50)]
+    public string Name { get; set; } = string.Empty;
+
 
     [Required]
     [MaxLength(50)]
@@ -15,8 +20,7 @@ public sealed class Cage : AuditableEntity
 
     public int RackId { get; set; }
 
-    public Rack Rack { get; set; } = null!;
-
+    public Rack? Rack { get; set; }
     public ICollection<Mouse> Mice { get; set; } =
         new List<Mouse>();
 }

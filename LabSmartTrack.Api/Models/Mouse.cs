@@ -21,9 +21,9 @@ public sealed class Mouse : AuditableEntity
 
     public int CageId { get; set; }
 
-    public Cage Cage { get; set; } = null!;
+    public Cage?  Cage { get; set; }
 
     public int StrainId { get; set; }
 
-    public Strain Strain { get; set; } = null!;
+    public Strain? Strain { get; set; } 
 }
