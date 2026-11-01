@@ -4,7 +4,7 @@ import {
   Observable,
 } from 'rxjs';
 
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 
 export interface HealthResponse {
   status: string;
@@ -24,6 +24,6 @@ export class ApiService {
       .get<HealthResponse>(
         `${this.apiBaseUrl}/api/Health`,
       );
-    
+
   }
 }

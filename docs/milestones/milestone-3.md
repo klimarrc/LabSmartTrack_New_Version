@@ -44,7 +44,7 @@ Mouse  Cage and Strain
 - [ ] Refresh the list after successful deletion.
 - [ ] Explain when related records prevent deletion.
 - [ ] Preserve the record if deletion fails.
- 
+
 ## 5. Testing and completion
 
 - [ ] Test service requests using Angular HTTP testing utilities.

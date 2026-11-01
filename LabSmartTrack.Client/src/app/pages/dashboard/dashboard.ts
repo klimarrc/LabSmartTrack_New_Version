@@ -8,7 +8,7 @@ import {
 import {
   ApiService,
   HealthResponse,
-} from '../../services/api.service';
+} from '../../services/api/api.service';
 
 @Component({
   selector: 'app-dashboard',
