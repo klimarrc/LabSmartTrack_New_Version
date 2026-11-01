@@ -25,13 +25,13 @@ public sealed class FacilitiesController : ControllerBase
             .AsNoTracking()
             .ToListAsync();
     }
-
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<Facility>>
-        GetFacility(int id)
+    public async Task<ActionResult<Facility>> GetFacility(
+        int id)
     {
-        Facility? facility =
-            await _context.Facilities.FindAsync(id);
+        var facility = await _context.Facilities
+            .AsNoTracking()
+            .FirstOrDefaultAsync(item => item.Id == id);
 
         if (facility is null)
         {
@@ -40,68 +40,131 @@ public sealed class FacilitiesController : ControllerBase
 
         return facility;
     }
-
+    
     [HttpPost]
-    public async Task<ActionResult<Facility>>
-        PostFacility(Facility facility)
+    public async Task<ActionResult<Facility>> PostFacility(
+        Facility facility)
     {
-        if (!ModelState.IsValid)
+        var name = facility.Name.Trim();
+
+        if (string.IsNullOrWhiteSpace(name))
         {
-            return ValidationProblem(ModelState);
+            return BadRequest(new
+            {
+                message = "Facility name is required."
+            });
         }
 
-        _context.Facilities.Add(facility);
+        var duplicateExists = await _context.Facilities
+            .AnyAsync(item => item.Name == name);
+
+        if (duplicateExists)
+        {
+            return Conflict(new
+            {
+                message = "A facility with this name already exists."
+            });
+        }
+
+        // Create a new entity using only permitted input fields.
+        var newFacility = new Facility
+        {
+            Name = name,
+            Description = facility.Description?.Trim(),
+            CreatedAtUtc = DateTime.UtcNow,
+            UpdatedAtUtc = DateTime.UtcNow
+        };
+
+        _context.Facilities.Add(newFacility);
         await _context.SaveChangesAsync();
 
         return CreatedAtAction(
             nameof(GetFacility),
-            new { id = facility.Id },
-            facility
+            new { id = newFacility.Id },
+            newFacility
         );
     }
 
+
     [HttpPut("{id:int}")]
-    public async Task<IActionResult>
-        PutFacility(int id, Facility facility)
+    public async Task<IActionResult> PutFacility(
+        int id,
+        Facility facility)
     {
         if (id != facility.Id)
         {
-            return BadRequest(
-                "Route ID does not match the facility ID."
-            );
+            return BadRequest(new
+            {
+                message = "The route ID must match the facility ID."
+            });
         }
 
-        if (!ModelState.IsValid)
-        {
-            return ValidationProblem(ModelState);
-        }
+        var existingFacility =
+            await _context.Facilities.FindAsync(id);
 
-        bool exists = await _context.Facilities
-            .AnyAsync(existing => existing.Id == id);
-
-        if (!exists)
+        if (existingFacility is null)
         {
             return NotFound();
         }
 
-        _context.Entry(facility).State =
-            EntityState.Modified;
+        var name = facility.Name.Trim();
+
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            return BadRequest(new
+            {
+                message = "Facility name is required."
+            });
+        }
+
+        var duplicateExists = await _context.Facilities
+            .AnyAsync(item =>
+                item.Id != id &&
+                item.Name == name);
+
+        if (duplicateExists)
+        {
+            return Conflict(new
+            {
+                message = "A facility with this name already exists."
+            });
+        }
+
+        existingFacility.Name = name;
+        existingFacility.Description =
+            facility.Description?.Trim();
+
+        // Preserve CreatedAtUtc.
+        existingFacility.UpdatedAtUtc = DateTime.UtcNow;
 
         await _context.SaveChangesAsync();
 
         return NoContent();
     }
 
+
     [HttpDelete("{id:int}")]
-    public async Task<IActionResult>
-        DeleteFacility(int id)
+    public async Task<IActionResult> DeleteFacility(
+        int id)
     {
-        Facility? facility =
+        var facility =
             await _context.Facilities.FindAsync(id);
 
         if (facility is null)
         {
             return NotFound();
+        }
+
+        var hasRooms = await _context.Rooms
+            .AnyAsync(room => room.FacilityId == id);
+
+        if (hasRooms)
+        {
+            return Conflict(new
+            {
+                message =
+                    "This facility contains rooms and cannot be deleted."
+            });
         }
 
         _context.Facilities.Remove(facility);

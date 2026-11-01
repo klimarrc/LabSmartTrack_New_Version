@@ -1,0 +1,117 @@
+<form
+  [formGroup]="form"
+  (ngSubmit)="save()"
+  [attr.aria-busy]="saving()"
+>
+  <header>
+    <h2>{{ room ? 'Edit room' : 'Add room' }}</h2>
+    <p>Enter room details and select its facility.</p>
+  </header>
+
+  @if (error()) {
+    <div class="error-notice" role="alert">{{ error() }}</div>
+  }
+
+  <div class="field">
+    <label for="room-name">Room name *</label>
+
+    <input
+      id="room-name"
+      formControlName="name"
+      maxlength="100"
+      placeholder="e.g. Mouse Room A"
+      aria-describedby="room-name-error"
+    >
+
+    <p id="room-name-error" class="field-error">
+      @if (form.controls.name.touched && form.controls.name.invalid) {
+        Enter a room name of up to 100 characters.
+      }
+    </p>
+  </div>
+
+  <div class="field">
+    <label for="room-number">Room number *</label>
+
+    <input
+      id="room-number"
+      formControlName="roomNumber"
+      maxlength="50"
+      placeholder="e.g. A-101"
+      aria-describedby="room-number-error"
+    >
+
+    <p id="room-number-error" class="field-error">
+      @if (
+        form.controls.roomNumber.touched &&
+        form.controls.roomNumber.invalid
+      ) {
+        Enter a room number of up to 50 characters.
+      }
+    </p>
+  </div>
+
+  <div class="field">
+    <label for="room-facility">Facility *</label>
+
+    @if (loadingFacilities()) {
+      <p role="status">Loading facilities...</p>
+    } @else if (facilityError()) {
+      <div role="alert">
+        <p>{{ facilityError() }}</p>
+        <button type="button" (click)="loadFacilities()">
+          Retry
+        </button>
+      </div>
+    } @else if (facilities().length === 0) {
+      <p>Add a facility before creating a room.</p>
+    }
+
+    <select
+      id="room-facility"
+      formControlName="facilityId"
+      aria-describedby="room-facility-error"
+    >
+      <option [ngValue]="0">Select a facility</option>
+
+      @for (facility of facilities(); track facility.id) {
+        <option [ngValue]="facility.id">
+          {{ facility.name }}
+        </option>
+      }
+    </select>
+
+    <p id="room-facility-error" class="field-error">
+      @if (
+        form.controls.facilityId.touched &&
+        form.controls.facilityId.invalid
+      ) {
+        Select a facility.
+      }
+    </p>
+  </div>
+
+  <footer>
+    <button
+      type="button"
+      class="secondary"
+      [disabled]="saving()"
+      (click)="cancel()"
+    >
+      Cancel
+    </button>
+
+    <button
+      type="submit"
+      [disabled]="
+        form.invalid ||
+        saving() ||
+        loadingFacilities() ||
+        !!facilityError() ||
+        facilities().length === 0
+      "
+    >
+      {{ saving() ? 'Saving...' : (room ? 'Save changes' : 'Create room') }}
+    </button>
+  </footer>
+</form>

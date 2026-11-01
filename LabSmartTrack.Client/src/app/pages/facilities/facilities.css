@@ -1,0 +1,262 @@
+:host {
+  display: block;
+  min-width: 0;
+  color: #173c50;
+}
+
+.facilities-page {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 32px;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.eyebrow {
+  margin: 0 0 10px;
+  color: #00898d;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(26px, 3vw, 34px);
+  letter-spacing: -0.03em;
+}
+
+.page-description {
+  margin: 10px 0 0;
+  color: #617788;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 10px 16px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color 150ms ease,
+    border-color 150ms ease;
+}
+
+.button-primary {
+  background: #087e89;
+  color: #fff;
+}
+
+.button-primary:hover:not(:disabled) {
+  background: #066671;
+}
+
+.button-primary span {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.button-secondary {
+  border-color: #c8dce4;
+  background: #f4fafb;
+  color: #176575;
+}
+
+.button-secondary:hover:not(:disabled) {
+  border-color: #85bac2;
+  background: #e5f3f5;
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.button:focus-visible,
+.table-wrapper:focus-visible {
+  outline: 3px solid #00898d;
+  outline-offset: 4px;
+}
+
+.notice {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  padding: 14px 18px;
+  border: 1px solid;
+  border-radius: 10px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.notice-success {
+  border-color: #b8dfd4;
+  background: #ecf8f2;
+  color: #22674f;
+}
+
+.notice-success span {
+  font-weight: 800;
+}
+
+.records-card,
+.form-card {
+  overflow: hidden;
+  border: 1px solid #dce7ee;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 6px 24px rgb(18 52 71 / 5%);
+}
+
+.form-card {
+  margin-bottom: 24px;
+  padding: 24px;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 22px 24px;
+  border-bottom: 1px solid #e8eff4;
+}
+
+.card-header h2 {
+  margin: 0;
+  font-size: 17px;
+}
+
+.card-header p {
+  margin: 6px 0 0;
+  color: #617788;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.count-badge {
+  flex-shrink: 0;
+  padding: 7px 12px;
+  border-radius: 20px;
+  background: #e5f4f4;
+  color: #076b70;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+th {
+  padding: 14px 24px;
+  background: #f6f9fc;
+  color: #526c7d;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+td {
+  padding: 20px 24px;
+  border-bottom: 1px solid #edf2f6;
+  font-size: 14px;
+  line-height: 1.6;
+  vertical-align: middle;
+}
+
+tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+tbody tr:hover {
+  background: #f8fcfd;
+}
+
+.record-id {
+  color: #617788;
+  font-size: 13px;
+}
+
+.facility-name {
+  min-width: 180px;
+  font-weight: 700;
+}
+
+.description-cell {
+  min-width: 220px;
+  max-width: 420px;
+  color: #617788;
+  overflow-wrap: anywhere;
+}
+
+.actions-column {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.empty-state {
+  padding: 48px 24px;
+  color: #617788;
+  text-align: center;
+}
+
+.empty-state h3 {
+  margin: 0 0 8px;
+  color: #173c50;
+}
+
+.empty-state p {
+  line-height: 1.6;
+}
+
+@media (max-width: 640px) {
+  .facilities-page {
+    padding: 20px 16px;
+  }
+
+  .page-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .card-header {
+    flex-wrap: wrap;
+    padding: 18px;
+  }
+
+  th,
+  td {
+    padding: 14px 18px;
+  }
+
+  .form-card {
+    padding: 18px;
+  }
+}

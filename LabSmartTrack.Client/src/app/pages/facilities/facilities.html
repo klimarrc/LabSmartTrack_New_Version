@@ -1,0 +1,121 @@
+<section class="facilities-page">
+  <header class="page-header">
+    <div>
+      <p class="eyebrow">COLONY MANAGEMENT</p>
+      <h1>Facilities</h1>
+      <p class="page-description">
+        Manage your research facilities and laboratory locations.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="button button-primary"
+      [disabled]="showForm()"
+      (click)="addFacility()"
+    >
+      <span aria-hidden="true">+</span>
+      Add facility
+    </button>
+  </header>
+
+  @if (successMessage()) {
+    <div class="notice notice-success" role="status">
+      <span aria-hidden="true">✓</span>
+      {{ successMessage() }}
+    </div>
+  }
+
+  @if (showForm()) {
+    <div class="form-card">
+      <app-facility-form
+        [facility]="selectedFacility()"
+        (saved)="onFacilitySaved()"
+        (cancelled)="closeForm()"
+      ></app-facility-form>
+    </div>
+  }
+
+  <div class="records-card">
+    <div class="card-header">
+      <div>
+        <h2>Research facilities</h2>
+        <p>Registered locations in your colony network.</p>
+      </div>
+
+      @if (!loading() && !error()) {
+        <span class="count-badge">
+          {{ facilities().length }}
+          {{ facilities().length === 1 ? 'facility' : 'facilities' }}
+        </span>
+      }
+    </div>
+
+    @if (loading()) {
+      <div class="empty-state" role="status">
+        Loading facilities...
+      </div>
+    } @else if (error()) {
+      <div class="empty-state" role="alert">
+        <p>{{ error() }}</p>
+        <button
+          type="button"
+          class="button button-secondary"
+          (click)="loadFacilities()"
+        >
+          Try again
+        </button>
+      </div>
+    } @else if (facilities().length === 0) {
+      <div class="empty-state">
+        <h3>No facilities yet</h3>
+        <p>Add your first research facility to get started.</p>
+      </div>
+    } @else {
+      <div
+        class="table-wrapper"
+        tabindex="0"
+        role="region"
+        aria-label="Facilities table"
+      >
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Facility name</th>
+              <th scope="col">Description</th>
+              <th scope="col" class="actions-column">Actions</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (facility of facilities(); track facility.id) {
+              <tr>
+                <td>
+                  <span class="record-id">#{{ facility.id }}</span>
+                </td>
+                <td class="facility-name">
+                  {{ facility.name }}
+                </td>
+                <td class="description-cell">
+                  {{ facility.description || 'No description provided' }}
+                </td>
+                <td class="actions-column">
+                  <button
+                    type="button"
+                    class="button button-secondary"
+                    [disabled]="showForm()"
+                    [attr.aria-label]="'Edit ' + facility.name"
+                    (click)="editFacility(facility)"
+                  >
+                    Edit
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</section>

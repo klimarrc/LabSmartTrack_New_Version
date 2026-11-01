@@ -1,0 +1,119 @@
+<form
+  class="facility-form"
+  [formGroup]="form"
+  (ngSubmit)="save()"
+  [attr.aria-busy]="saving()"
+>
+  <header class="form-header">
+    <p class="eyebrow">FACILITY DETAILS</p>
+
+    <h2>
+      {{ facility ? 'Edit facility' : 'Add facility' }}
+    </h2>
+
+    <p class="form-description">
+      Enter the facility name and an optional description.
+    </p>
+  </header>
+
+  @if (error()) {
+    <div class="error-notice" role="alert">
+      {{ error() }}
+    </div>
+  }
+
+  <div class="field">
+    <label for="facility-name">
+      Facility name <span class="required">*</span>
+    </label>
+
+    <input
+      id="facility-name"
+      type="text"
+      formControlName="name"
+      maxlength="100"
+      placeholder="e.g. Central Research Facility"
+      [attr.aria-invalid]="
+        form.controls.name.touched && form.controls.name.invalid
+      "
+      aria-describedby="facility-name-help facility-name-error"
+    >
+
+    <p id="facility-name-help" class="field-help">
+      Use a clear, recognizable name.
+    </p>
+
+    <p id="facility-name-error" class="field-error">
+      @if (
+        form.controls.name.touched &&
+        form.controls.name.invalid
+      ) {
+        @if (
+          form.controls.name.hasError('required') ||
+          form.controls.name.hasError('pattern')
+        ) {
+          Enter a facility name.
+        } @else if (
+          form.controls.name.hasError('maxlength')
+        ) {
+          Name cannot exceed 100 characters.
+        }
+      }
+    </p>
+  </div>
+
+  <div class="field">
+    <label for="facility-description">
+      Description <span class="optional">(optional)</span>
+    </label>
+
+    <textarea
+      id="facility-description"
+      formControlName="description"
+      maxlength="500"
+      rows="4"
+      placeholder="Describe the facility or its location..."
+      [attr.aria-invalid]="
+        form.controls.description.touched &&
+        form.controls.description.invalid
+      "
+      aria-describedby="description-count description-error"
+    ></textarea>
+
+    <p id="description-count" class="character-count">
+      {{ form.controls.description.value.length }} / 500
+    </p>
+
+    <p id="description-error" class="field-error">
+      @if (
+        form.controls.description.touched &&
+        form.controls.description.hasError('maxlength')
+      ) {
+        Description cannot exceed 500 characters.
+      }
+    </p>
+  </div>
+
+  <footer class="form-actions">
+    <p class="required-note">* Required field</p>
+
+    <div class="action-buttons">
+      <button
+        type="button"
+        class="button button-secondary"
+        [disabled]="saving()"
+        (click)="cancel()"
+      >
+        Cancel
+      </button>
+
+      <button
+        type="submit"
+        class="button button-primary"
+        [disabled]="form.invalid || saving()"
+      >
+        {{ saving() ? 'Saving...' : (facility ? 'Save changes' : 'Create facility') }}
+      </button>
+    </div>
+  </footer>
+</form>

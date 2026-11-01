@@ -22,7 +22,7 @@ export class ApiService {
   getHealth(): Observable<HealthResponse> {
     return this.http
       .get<HealthResponse>(
-        `${this.apiBaseUrl}/api/Health`,
+        `${this.apiBaseUrl}/Health`,
       );
 
   }
