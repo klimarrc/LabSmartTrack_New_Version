@@ -9,23 +9,26 @@ var builder = WebApplication.CreateBuilder(args);
 // Controllers
 builder.Services.AddControllers();
 
-// SQL Server and Entity Framework Core
-var connectionString =
-    builder.Configuration.GetConnectionString(
-        "LabSmartTrackDatabase"
-    );
-
-if (string.IsNullOrWhiteSpace(connectionString))
+// SQL Server is used outside the test environment.
+// The test factory registers its own in-memory database.
+if (!builder.Environment.IsEnvironment("Testing"))
 {
-    throw new InvalidOperationException(
-        "Connection string 'LabSmartTrackDatabase' was not found."
+    var connectionString =
+        builder.Configuration.GetConnectionString(
+            "LabSmartTrackDatabase"
+        );
+
+    if (string.IsNullOrWhiteSpace(connectionString))
+    {
+        throw new InvalidOperationException(
+            "Connection string 'LabSmartTrackDatabase' was not found."
+        );
+    }
+
+    builder.Services.AddDbContext<LabSmartTrackDbContext>(
+        options => options.UseSqlServer(connectionString)
     );
 }
-
-builder.Services.AddDbContext<LabSmartTrackDbContext>(
-    options =>
-        options.UseSqlServer(connectionString)
-);
 
 // Swagger/OpenAPI
 builder.Services.AddEndpointsApiExplorer();
@@ -52,15 +55,14 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+
+    app.MapGet(
+        "/",
+        () => Results.Redirect("/swagger")
+    );
 }
 
 app.UseCors(AngularDevelopmentPolicy);
-
-// Redirect the API root to Swagger.
-app.MapGet(
-    "/",
-    () => Results.Redirect("/swagger")
-);
 
 app.MapControllers();
 
