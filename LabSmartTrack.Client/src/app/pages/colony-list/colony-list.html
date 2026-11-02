@@ -52,6 +52,16 @@
           + Add strain
         </button>
       }
+      <!-- Add Mouse button -->
+      @if (isMicePage) {
+        <button 
+          type="button" 
+          class="primary-button"
+          [disabled]="showMouseForm() || loadingMouse()" 
+          (click)="addMouse()">
+          + Add mouse
+        </button>
+      }
       <!-- Refresh button -->
       <button
         type="button"
@@ -114,27 +124,43 @@
   }
   <!-- Forms for adding/editing Strains -->
   @if (isStrainsPage) {
-  @if (strainMessage()) {
-    <div class="success-notice" role="status">
-      {{ strainMessage() }}
-    </div>
-  }
+    @if (strainMessage()) {
+      <div class="success-notice" role="status">
+        {{ strainMessage() }}
+      </div>
+    }
 
-  @if (loadingStrain()) {
-    <p role="status">Loading strain details...</p>
-  }
+    @if (loadingStrain()) {
+      <p role="status">Loading strain details...</p>
+    }
 
-  @if (showStrainForm()) {
-    <div class="room-form-card">
-      <app-strain-form
-        [strain]="selectedStrain()"
-        (saved)="onStrainSaved()"
-        (cancelled)="closeStrainForm()"
-      ></app-strain-form>
-    </div>
+    @if (showStrainForm()) {
+      <div class="room-form-card">
+        <app-strain-form
+          [strain]="selectedStrain()"
+          (saved)="onStrainSaved()"
+          (cancelled)="closeStrainForm()"
+        ></app-strain-form>
+      </div>
+    }
   }
-}
-
+  <!-- Forms for adding/editing Mice -->
+  @if (isMicePage) {
+    @if (mouseMessage()) {
+      <div class="success-notice" role="status">{{ mouseMessage() }}</div>
+    }
+    @if (loadingMouse()) {
+      <p role="status">Loading mouse details...</p>
+    }
+    @if (showMouseForm()) {
+      <div class="room-form-card">
+        <app-mouse-form [mouse]="selectedMouse()"
+                        (saved)="onMouseSaved()"
+                        (cancelled)="closeMouseForm()"></app-mouse-form>
+      </div>
+    }
+  }
+  
   <!-- Table of records -->
  <div class="records-card" [attr.aria-busy]="loading()">
     <div class="toolbar">
@@ -304,8 +330,18 @@
                     </button>
                   </td>
                 }
+                <!-- Edit buttons for Mice -->
+                 @if (isMicePage) {
+                <td>
+                  <button type="button" (click)="editMouse(row.id)"
+                          [disabled]="showMouseForm() || loadingMouse()"
+                          [attr.aria-label]="'Edit mouse ' + row.values['identifier']">
+                    Edit
+                  </button>
+                </td>
+              }
              </tr>
-  }
+            }
           </tbody>
         </table>
       </div>

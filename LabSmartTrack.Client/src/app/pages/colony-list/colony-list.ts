@@ -35,12 +35,14 @@ import {
     Rack,
     Cage,
     Strain,
+    Mouse,
 } from '../../../models/colony.models';
 
 import { RoomForm } from '../../components/room-form/room-form';
 import { RackForm } from '../../components/rack-form/rack-form';
 import { CageForm } from '../../components/cage-form/cage-form';
 import { StrainForm } from '../../components/strain-form/strain-form';
+import { MouseForm } from '../../components/mouse-form/mouse-form';
 
 type EntityKind =
     | 'rooms'
@@ -62,7 +64,7 @@ interface ListRow {
 @Component({
     selector: 'app-colony-list',
     standalone: true,
-    imports: [RoomForm, RackForm, CageForm, StrainForm],
+    imports: [RoomForm, RackForm, CageForm, StrainForm, MouseForm],
     templateUrl: './colony-list.html',
     styleUrl: './colony-list.css',
 })
@@ -121,6 +123,15 @@ export class ColonyList {
     protected readonly strainMessage = signal('');
     protected readonly loadingStrain = signal(false);
 
+    // Mouse form state
+    private mouseEditRequest = 0;
+
+    protected readonly selectedMouse = signal<Mouse | null>(null);
+    protected readonly showMouseForm = signal(false);
+    protected readonly loadingMouse = signal(false);
+    protected readonly mouseMessage = signal('');
+
+
     protected readonly statuses = computed(() => {
         const values = this.rows()
             .map(row => row.values['status'])
@@ -177,11 +188,13 @@ export class ColonyList {
                 this.closeRackForm();
                 this.closeCageForm();
                 this.closeStrainForm();
+                this.closeMouseForm();
 
                 this.roomMessage.set('');
                 this.rackMessage.set('');
                 this.cageMessage.set('');
                 this.strainMessage.set('');
+                this.mouseMessage.set('');
 
                 this.search.set('');
                 this.statusFilter.set('');
@@ -495,8 +508,57 @@ export class ColonyList {
         this.reload();
     }
 
-    // Loading records
+    // Mouse actions
+    protected get isMicePage(): boolean {
+        return this.kind === 'mice';
+    }
 
+    protected addMouse(): void {
+        if (!this.isMicePage || this.loadingMouse() || this.showMouseForm()) return;
+        this.selectedMouse.set(null);
+        this.mouseMessage.set('');
+        this.showMouseForm.set(true);
+    }
+
+    protected editMouse(id: number): void {
+        if (!this.isMicePage || this.loadingMouse() || this.showMouseForm()) return;
+
+        const request = ++this.mouseEditRequest;
+        this.loadingMouse.set(true);
+        this.mouseMessage.set('');
+        this.error.set('');
+
+        this.miceService.getById(id).pipe(
+            takeUntilDestroyed(this.destroyRef),
+        ).subscribe({
+            next: mouse => {
+                if (request !== this.mouseEditRequest || !this.isMicePage) return;
+                this.loadingMouse.set(false);
+                this.selectedMouse.set(mouse);
+                this.showMouseForm.set(true);
+            },
+            error: () => {
+                if (request !== this.mouseEditRequest || !this.isMicePage) return;
+                this.loadingMouse.set(false);
+                this.error.set('Unable to load mouse details. Please try again.');
+            },
+        });
+    }
+
+    protected closeMouseForm(): void {
+        this.mouseEditRequest++;
+        this.loadingMouse.set(false);
+        this.showMouseForm.set(false);
+        this.selectedMouse.set(null);
+    }
+
+    protected onMouseSaved(): void {
+        this.closeMouseForm();
+        this.mouseMessage.set('Mouse saved successfully.');
+        this.reload();
+    }
+
+    // Loading records
     protected reload(): void {
         this.refreshRequests.next();
     }

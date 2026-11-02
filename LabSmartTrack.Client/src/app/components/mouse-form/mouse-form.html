@@ -1,0 +1,93 @@
+<form [formGroup]="form" (ngSubmit)="save()" [attr.aria-busy]="loading() || saving()">
+  <header>
+    <h2>{{ mouse ? 'Edit mouse' : 'Add mouse' }}</h2>
+    <p>Select its cage and strain. Leave birth date blank if unknown.</p>
+  </header>
+
+  @if (loading()) {
+    <p role="status">Loading mouse form options...</p>
+  } @else if (loadError()) {
+    <div class="error-notice" role="alert">
+      {{ loadError() }}
+      <button type="button" (click)="loadOptions()">Retry</button>
+    </div>
+  } @else if (!cages().length || !strains().length) {
+    <p role="status">At least one cage and one strain are needed to register a mouse.</p>
+  }
+
+  @if (error()) {
+    <div class="error-notice" role="alert">{{ error() }}</div>
+  }
+
+  <div class="field">
+    <label for="mouse-identifier">Identifier *</label>
+    <input id="mouse-identifier" formControlName="identifier"
+           required maxlength="50" placeholder="e.g. M-0003">
+    @if (form.controls.identifier.touched && form.controls.identifier.invalid) {
+      <p class="field-error">Enter an identifier of up to 50 characters.</p>
+    }
+  </div>
+
+  <div class="field">
+    <label for="mouse-sex">Sex *</label>
+    <select id="mouse-sex" formControlName="sex" required>
+      <option value="" disabled>Select sex</option>
+      @for (sex of sexes(); track sex) {
+        <option [value]="sex">{{ sex }}</option>
+      }
+    </select>
+  </div>
+
+  <div class="field">
+    <label for="mouse-status">Status *</label>
+    <select id="mouse-status" formControlName="status" required>
+      <option value="" disabled>Select status</option>
+      @for (status of statuses(); track status) {
+        <option [value]="status">{{ status }}</option>
+      }
+    </select>
+  </div>
+
+  <div class="field">
+    <label for="mouse-birth-date">Birth date (optional)</label>
+    <input id="mouse-birth-date" type="date" formControlName="birthDate"
+           [attr.max]="today() || null" aria-describedby="mouse-date-help">
+    <p id="mouse-date-help">
+      @if (form.controls.birthDate.hasError('futureDate')) {
+        <span class="field-error">Birth date cannot be after the facility date.</span>
+      } @else if (today()) {
+        Facility date: {{ today() }} (Winnipeg).
+      }
+    </p>
+  </div>
+
+  <div class="field">
+    <label for="mouse-cage">Cage *</label>
+    <select id="mouse-cage" formControlName="cageId" required>
+      <option [ngValue]="0" disabled>Select a cage</option>
+      @for (cage of cages(); track cage.id) {
+        <option [ngValue]="cage.id">{{ cage.cageNumber }} — {{ cage.name }}</option>
+      }
+    </select>
+  </div>
+
+  <div class="field">
+    <label for="mouse-strain">Strain *</label>
+    <select id="mouse-strain" formControlName="strainId" required>
+      <option [ngValue]="0" disabled>Select a strain</option>
+      @for (strain of strains(); track strain.id) {
+        <option [ngValue]="strain.id">{{ strain.name }}</option>
+      }
+    </select>
+  </div>
+
+  <footer>
+    <button type="button" class="secondary" [disabled]="saving()" (click)="cancel()">
+      Cancel
+    </button>
+    <button type="submit" [disabled]="form.invalid || saving() || loading() ||
+        !!loadError() || !today() || !cages().length || !strains().length">
+      {{ saving() ? 'Saving...' : (mouse ? 'Save changes' : 'Create mouse') }}
+    </button>
+  </footer>
+</form>

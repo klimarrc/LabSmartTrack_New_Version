@@ -21,9 +21,17 @@ import { CrudService } from '../../app/services/crud/crud.service';
 // Use your existing environment configuration here.
 // Adjust this import if your environment file is elsewhere.
 import { environment } from '../../environments/environment';
+import { Observable } from 'rxjs/internal/Observable';
 
 const apiBaseUrl =
     environment.apiBaseUrl.replace(/\/+$/, '');
+
+export interface MouseFormOptions {
+    sexes: string[];
+    statuses: string[];
+    timeZone: string;
+    today: string;
+}
 
 @Injectable({ providedIn: 'root' })
 export class FacilitiesService
@@ -66,9 +74,16 @@ export class StrainsService
 }
 
 @Injectable({ providedIn: 'root' })
-export class MiceService
-    extends CrudService<Mouse, MouseRequest> {
+export class MiceService extends CrudService<Mouse, MouseRequest> {
+    private readonly optionsHttp = inject(HttpClient);
+
     constructor() {
         super(inject(HttpClient), `${apiBaseUrl}/Mice`);
+    }
+
+    getFormOptions(): Observable<MouseFormOptions> {
+        return this.optionsHttp.get<MouseFormOptions>(
+            `${apiBaseUrl}/Mice/form-options`,
+        );
     }
 }
