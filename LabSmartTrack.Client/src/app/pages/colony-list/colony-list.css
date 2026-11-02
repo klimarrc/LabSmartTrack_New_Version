@@ -236,6 +236,62 @@ tbody tr:last-child td {
   cursor: not-allowed;
 }
 
+/* Keep action buttons readable and consistently sized. */
+td:has(> button) {
+  min-width: 110px;
+  white-space: nowrap;
+}
+
+td > button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 72px;
+  min-height: 38px;
+  padding: 8px 16px;
+
+  border: 1px solid #bcdde5;
+  border-radius: 8px;
+  background: #eef8fa;
+  color: #086e80;
+
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1;
+
+  white-space: nowrap;
+  word-break: normal;
+  overflow-wrap: normal;
+  cursor: pointer;
+}
+
+td > button:hover:not(:disabled) {
+  border-color: #087f94;
+  background: #087f94;
+  color: #fff;
+}
+
+td > button:focus-visible {
+  outline: 3px solid #07868d;
+  outline-offset: 3px;
+}
+
+td > button:disabled {
+  background: #f2f6f8;
+  border-color: #dce5ea;
+  color: #718591;
+  opacity: 1;
+  cursor: not-allowed;
+}
+
+/* Allow horizontal scrolling instead of squeezing the columns. */
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
 @media (max-width: 600px) {
   .page-actions {
     width: 100%;

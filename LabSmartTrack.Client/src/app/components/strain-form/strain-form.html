@@ -1,0 +1,99 @@
+<form
+  [formGroup]="form"
+  (ngSubmit)="save()"
+  [attr.aria-busy]="saving()"
+>
+  <header>
+    <h2>{{ strain ? 'Edit strain' : 'Add strain' }}</h2>
+    <p>Enter the strain name and an optional description.</p>
+  </header>
+
+  @if (error()) {
+    <div class="error-notice" role="alert">
+      {{ error() }}
+    </div>
+  }
+
+  <div class="field">
+    <label for="strain-name">
+      Name <span aria-hidden="true">*</span>
+    </label>
+
+    <input
+      id="strain-name"
+      type="text"
+      formControlName="name"
+      required
+      maxlength="100"
+      placeholder="e.g. C57BL/6J"
+      aria-describedby="strain-name-error"
+      [attr.aria-invalid]="
+        form.controls.name.touched && form.controls.name.invalid
+      "
+    >
+
+    <div id="strain-name-error" class="field-error">
+      @if (form.controls.name.touched) {
+        @if (
+          form.controls.name.hasError('required') ||
+          form.controls.name.hasError('pattern')
+        ) {
+          <span>Enter a strain name.</span>
+        } @else if (form.controls.name.hasError('maxlength')) {
+          <span>Name must not exceed 100 characters.</span>
+        }
+      }
+    </div>
+  </div>
+
+  <div class="field">
+    <label for="strain-description">
+      Description <span class="optional">(optional)</span>
+    </label>
+
+    <textarea
+      id="strain-description"
+      formControlName="description"
+      rows="4"
+      maxlength="500"
+      placeholder="Add useful information about this strain..."
+      aria-describedby="strain-description-count strain-description-error"
+      [attr.aria-invalid]="
+        form.controls.description.touched &&
+        form.controls.description.invalid
+      "
+    ></textarea>
+
+    <p id="strain-description-count" class="character-count">
+      {{ form.controls.description.value.length }} / 500 characters
+    </p>
+
+    <div id="strain-description-error" class="field-error">
+      @if (
+        form.controls.description.touched &&
+        form.controls.description.hasError('maxlength')
+      ) {
+        <span>Description must not exceed 500 characters.</span>
+      }
+    </div>
+  </div>
+
+  <footer>
+    <button
+      type="button"
+      class="secondary"
+      [disabled]="saving()"
+      (click)="cancel()"
+    >
+      Cancel
+    </button>
+
+    <button
+      type="submit"
+      class="primary"
+      [disabled]="form.invalid || saving()"
+    >
+      {{ saving() ? 'Saving...' : (strain ? 'Save changes' : 'Create strain') }}
+    </button>
+  </footer>
+</form>

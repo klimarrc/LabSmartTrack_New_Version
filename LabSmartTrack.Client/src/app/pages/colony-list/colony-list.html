@@ -5,8 +5,9 @@
       <h1>{{ title() }}</h1>
       <p>View and search your colony records.</p>
     </div>
-
+  
     <div class="page-actions">
+      <!-- Add Room button -->
       @if (isRoomsPage) {
         <button
           type="button"
@@ -16,7 +17,42 @@
           + Add room
         </button>
       }
-
+      <!-- Add Rack button -->
+      @if (isRacksPage) {
+        <button
+          type="button"
+          class="primary-button"
+          [disabled]="showRackForm() || loadingRack()"
+          (click)="addRack()"
+        >
+          <span aria-hidden="true">+</span>
+          Add rack
+        </button>
+      }
+      <!-- Add Cage button -->
+      @if (isCagesPage) {
+        <button
+          type="button"
+          class="primary-button"
+          [disabled]="showCageForm() || loadingCage()"
+          (click)="addCage()"
+        >
+          <span aria-hidden="true">+</span>
+          Add cage
+        </button>
+      }
+      <!-- Add Strain button -->
+      @if (isStrainsPage) {
+        <button
+          type="button"
+          class="primary-button"
+          [disabled]="showStrainForm() || loadingStrain()"
+          (click)="addStrain()"
+        >
+          + Add strain
+        </button>
+      }
+      <!-- Refresh button -->
       <button
         type="button"
         class="refresh-button"
@@ -27,14 +63,9 @@
       </button>
     </div>
   </header>
-
+  
+  <!-- Forms for adding/editing Rooms -->
   @if (isRoomsPage) {
-    @if (roomMessage()) {
-      <div class="success-notice" role="status">
-        {{ roomMessage() }}
-      </div>
-    }
-
     @if (loadingRoom()) {
       <p role="status">Loading room details...</p>
     }
@@ -49,8 +80,63 @@
       </div>
     }
   }
+  <!-- Forms for adding/editing Racks -->
+  @if (isRacksPage) {
+    @if (loadingRack()) {
+      <p role="status">Loading rack details...</p>
+    }
 
-  <div class="records-card" [attr.aria-busy]="loading()">
+    @if (showRackForm()) {
+      <div class="room-form-card">
+        <app-rack-form
+          [rack]="selectedRack()"
+          (saved)="onRackSaved()"
+          (cancelled)="closeRackForm()"
+        ></app-rack-form>
+      </div>
+    }
+  }
+  <!-- Forms for adding/editing Cages -->
+  @if (isCagesPage) {
+    @if (loadingCage()) {
+      <p role="status">Loading cage details...</p>
+    }
+
+    @if (showCageForm()) {
+      <div class="room-form-card">
+        <app-cage-form
+          [cage]="selectedCage()"
+          (saved)="onCageSaved()"
+          (cancelled)="closeCageForm()"
+        ></app-cage-form>
+      </div>
+    }
+  }
+  <!-- Forms for adding/editing Strains -->
+  @if (isStrainsPage) {
+  @if (strainMessage()) {
+    <div class="success-notice" role="status">
+      {{ strainMessage() }}
+    </div>
+  }
+
+  @if (loadingStrain()) {
+    <p role="status">Loading strain details...</p>
+  }
+
+  @if (showStrainForm()) {
+    <div class="room-form-card">
+      <app-strain-form
+        [strain]="selectedStrain()"
+        (saved)="onStrainSaved()"
+        (cancelled)="closeStrainForm()"
+      ></app-strain-form>
+    </div>
+  }
+}
+
+  <!-- Table of records -->
+ <div class="records-card" [attr.aria-busy]="loading()">
     <div class="toolbar">
       <div class="search-field">
         <label for="record-search">
@@ -136,10 +222,16 @@
                 </th>
               }
 
-              @if (isRoomsPage) {
+              @if (
+                isRoomsPage ||
+                isRacksPage ||
+                isCagesPage ||
+                isStrainsPage
+              ) {
                 <th scope="col">Actions</th>
               }
-            </tr>
+
+              </tr>
           </thead>
 
           <tbody>
@@ -158,7 +250,7 @@
                     }
                   </td>
                 }
-
+                 <!-- Edit buttons for Rooms -->
                 @if (isRoomsPage) {
                   <td>
                     <button
@@ -173,8 +265,47 @@
                     </button>
                   </td>
                 }
-              </tr>
-            }
+                <!-- Edit buttons for Racks -->
+                @if (isRacksPage) {
+                  <td>
+                    <button
+                      type="button"
+                      [disabled]="showRackForm() || loadingRack()"
+                      [attr.aria-label]="'Edit rack ' + row.values['name']"
+                      (click)="editRack(row.id)"
+                    >
+                      Edit
+                    </button>
+                  </td>
+                }
+                <!-- Edit buttons for Cages -->
+                @if (isCagesPage) {
+                  <td>
+                    <button
+                      type="button"
+                      [disabled]="showCageForm() || loadingCage()"
+                      [attr.aria-label]="'Edit cage ' + row.values['name']"
+                      (click)="editCage(row.id)"
+                    >
+                      Edit
+                    </button>
+                  </td>
+                }
+                <!-- Edit buttons for Strains -->
+                @if (isStrainsPage) {
+                  <td>
+                    <button
+                      type="button"
+                      [disabled]="showStrainForm() || loadingStrain()"
+                      [attr.aria-label]="'Edit strain ' + row.values['name']"
+                      (click)="editStrain(row.id)"
+                    >
+                      Edit
+                    </button>
+                  </td>
+                }
+             </tr>
+  }
           </tbody>
         </table>
       </div>
