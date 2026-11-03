@@ -12,9 +12,8 @@ namespace LabSmartTrack.Api.Controllers;
 [Route("api/[controller]")]
 public sealed class MiceController : ControllerBase
 {
-    private static readonly string[] AllowedSexes = ["Male"];
-    private static readonly string[] AllowedStatuses = ["Active"];
-
+    private static readonly string[] AllowedSexes = ["Male", "Female"];
+    private static readonly string[] AllowedStatuses = ["Active", "Deceased"];
     // This must match the unique index name in your EF migration.
     private const string IdentifierIndexName = "IX_Mice_Identifier";
 
