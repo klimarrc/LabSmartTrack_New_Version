@@ -1,0 +1,156 @@
+<form
+  [formGroup]="form"
+  (ngSubmit)="save()"
+  [attr.aria-busy]="saving()"
+>
+  <header class="form-heading">
+    <p class="eyebrow">COLONY MANAGEMENT</p>
+    <h2>{{ rack ? 'Edit rack' : 'Add rack' }}</h2>
+    <p>Enter the rack details and select its room.</p>
+  </header>
+
+  @if (error()) {
+    <div class="error-notice" role="alert">
+      {{ error() }}
+    </div>
+  }
+
+  <div class="form-grid">
+    <div class="form-field">
+      <label for="rack-name">
+        Name <span aria-hidden="true">*</span>
+      </label>
+
+      <input
+        id="rack-name"
+        type="text"
+        formControlName="name"
+        placeholder="For example, Rack A"
+        required
+        maxlength="100"
+        aria-describedby="rack-name-error"
+        [attr.aria-invalid]="
+          form.controls.name.touched && form.controls.name.invalid
+        "
+      >
+
+      <div id="rack-name-error" class="field-error">
+        @if (form.controls.name.touched) {
+          @if (
+            form.controls.name.hasError('required') ||
+            form.controls.name.hasError('pattern')
+          ) {
+            <span>Enter a rack name.</span>
+          } @else if (form.controls.name.hasError('maxlength')) {
+            <span>Name must not exceed 100 characters.</span>
+          }
+        }
+      </div>
+    </div>
+
+    <div class="form-field">
+      <label for="rack-number">
+        Rack number <span aria-hidden="true">*</span>
+      </label>
+
+      <input
+        id="rack-number"
+        type="text"
+        formControlName="rackNumber"
+        placeholder="For example, R-001"
+        required
+        maxlength="50"
+        aria-describedby="rack-number-error"
+        [attr.aria-invalid]="
+          form.controls.rackNumber.touched &&
+          form.controls.rackNumber.invalid
+        "
+      >
+
+      <div id="rack-number-error" class="field-error">
+        @if (form.controls.rackNumber.touched) {
+          @if (
+            form.controls.rackNumber.hasError('required') ||
+            form.controls.rackNumber.hasError('pattern')
+          ) {
+            <span>Enter a rack number.</span>
+          } @else if (form.controls.rackNumber.hasError('maxlength')) {
+            <span>Rack number must not exceed 50 characters.</span>
+          }
+        }
+      </div>
+    </div>
+
+    <div class="form-field full-width">
+      <label for="rack-room">
+        Room <span aria-hidden="true">*</span>
+      </label>
+
+      <select
+        id="rack-room"
+        formControlName="roomId"
+        required
+        aria-describedby="rack-room-help rack-room-error"
+        [attr.aria-invalid]="
+          form.controls.roomId.touched && form.controls.roomId.invalid
+        "
+      >
+        <option [ngValue]="0" disabled>Select a room</option>
+
+        @for (room of rooms(); track room.id) {
+          <option [ngValue]="room.id">
+            {{ room.name }} — {{ room.roomNumber }}
+            (Facility {{ room.facilityId }})
+          </option>
+        }
+      </select>
+
+      <div id="rack-room-help" class="field-help">
+        @if (loadingRooms()) {
+          <p role="status">Loading rooms...</p>
+        } @else if (roomsError()) {
+          <p role="alert">{{ roomsError() }}</p>
+          <button type="button" (click)="loadRooms()">
+            Retry loading rooms
+          </button>
+        } @else if (rooms().length === 0) {
+          <p>Create a room before adding a rack.</p>
+        }
+      </div>
+
+      <div id="rack-room-error" class="field-error">
+        @if (
+          form.controls.roomId.touched &&
+          form.controls.roomId.invalid
+        ) {
+          <span>Select a room.</span>
+        }
+      </div>
+    </div>
+  </div>
+
+  <footer class="form-actions">
+    <button
+      type="button"
+      class="secondary-button"
+      [disabled]="saving()"
+      (click)="cancel()"
+    >
+      Cancel
+    </button>
+
+    <button
+      type="submit"
+      class="primary-button"
+      [disabled]="
+        form.invalid ||
+        saving() ||
+        loadingRooms() ||
+        !!roomsError() ||
+        rooms().length === 0
+      "
+    >
+      {{ saving() ? 'Saving...' : (rack ? 'Save changes' : 'Create rack') }}
+    </button>
+  </footer>
+</form>

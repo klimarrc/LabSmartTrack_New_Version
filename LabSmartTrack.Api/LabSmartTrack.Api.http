@@ -1,0 +1,6 @@
+@LabSmartTrack.Api_HostAddress = http://localhost:5122
+
+GET {{LabSmartTrack.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

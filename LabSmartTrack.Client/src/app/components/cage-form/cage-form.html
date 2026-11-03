@@ -1,0 +1,151 @@
+<form
+  [formGroup]="form"
+  (ngSubmit)="save()"
+  [attr.aria-busy]="saving()"
+>
+  <header>
+    <h2>{{ cage ? 'Edit cage' : 'Add cage' }}</h2>
+    <p>Enter cage details and select its rack.</p>
+  </header>
+
+  @if (error()) {
+    <div class="error-notice" role="alert">
+      {{ error() }}
+    </div>
+  }
+
+  <div class="field">
+    <label for="cage-name">Cage name *</label>
+
+    <input
+      id="cage-name"
+      type="text"
+      formControlName="name"
+      required
+      maxlength="50"
+      placeholder="e.g. Breeding Cage 1"
+      aria-describedby="cage-name-error"
+    >
+
+    <p id="cage-name-error" class="field-error">
+      @if (form.controls.name.touched && form.controls.name.invalid) {
+        Enter a cage name of up to 50 characters.
+      }
+    </p>
+  </div>
+
+  <div class="field">
+    <label for="cage-number">Cage number *</label>
+
+    <input
+      id="cage-number"
+      type="text"
+      formControlName="cageNumber"
+      required
+      maxlength="50"
+      placeholder="e.g. C-001"
+      aria-describedby="cage-number-error"
+    >
+
+    <p id="cage-number-error" class="field-error">
+      @if (
+        form.controls.cageNumber.touched &&
+        form.controls.cageNumber.invalid
+      ) {
+        Enter a cage number of up to 50 characters.
+      }
+    </p>
+  </div>
+
+  <div class="field">
+    <label for="cage-status">Status *</label>
+
+    <select
+      id="cage-status"
+      formControlName="status"
+      required
+      aria-describedby="cage-status-error"
+    >
+      <option value="" disabled>Select a status</option>
+
+      @for (status of statuses; track status) {
+        <option [value]="status">{{ status }}</option>
+      }
+    </select>
+
+    <p id="cage-status-error" class="field-error">
+      @if (
+        form.controls.status.touched &&
+        form.controls.status.invalid
+      ) {
+        Select a valid status.
+      }
+    </p>
+  </div>
+
+  <div class="field">
+    <label for="cage-rack">Rack *</label>
+
+    @if (loadingRacks()) {
+      <p role="status">Loading racks...</p>
+    } @else if (racksError()) {
+      <div role="alert">
+        <p>{{ racksError() }}</p>
+
+        <button type="button" (click)="loadRacks()">
+          Retry
+        </button>
+      </div>
+    } @else if (racks().length === 0) {
+      <p>Add a rack before creating a cage.</p>
+    }
+
+    <select
+      id="cage-rack"
+      formControlName="rackId"
+      required
+      aria-describedby="cage-rack-error"
+    >
+      <option [ngValue]="0" disabled>Select a rack</option>
+
+      @for (rack of racks(); track rack.id) {
+        <option [ngValue]="rack.id">
+          {{ rack.name }} — {{ rack.rackNumber }}
+        </option>
+      }
+    </select>
+
+    <p id="cage-rack-error" class="field-error">
+      @if (
+        form.controls.rackId.touched &&
+        form.controls.rackId.invalid
+      ) {
+        Select a rack.
+      }
+    </p>
+  </div>
+
+  <footer>
+    <button
+      type="button"
+      class="secondary"
+      [disabled]="saving()"
+      (click)="cancel()"
+    >
+      Cancel
+    </button>
+
+    <button
+      type="submit"
+      [disabled]="
+        form.invalid ||
+        saving() ||
+        loadingRacks() ||
+        !!racksError() ||
+        racks().length === 0
+      "
+    >
+      {{ saving() ? 'Saving...' : (cage ? 'Save changes' : 'Create cage') }}
+    </button>
+  </footer>
+</form>

@@ -1,0 +1,350 @@
+<section class="colony-page">
+  <header class="page-heading">
+    <div>
+      <p class="eyebrow">COLONY MANAGEMENT</p>
+      <h1>{{ title() }}</h1>
+      <p>View and search your colony records.</p>
+    </div>
+  
+    <div class="page-actions">
+      <!-- Add Room button -->
+      @if (isRoomsPage) {
+        <button
+          type="button"
+          [disabled]="showRoomForm() || loadingRoom()"
+          (click)="addRoom()"
+        >
+          + Add room
+        </button>
+      }
+      <!-- Add Rack button -->
+      @if (isRacksPage) {
+        <button
+          type="button"
+          class="primary-button"
+          [disabled]="showRackForm() || loadingRack()"
+          (click)="addRack()"
+        >
+          <span aria-hidden="true">+</span>
+          Add rack
+        </button>
+      }
+      <!-- Add Cage button -->
+      @if (isCagesPage) {
+        <button
+          type="button"
+          class="primary-button"
+          [disabled]="showCageForm() || loadingCage()"
+          (click)="addCage()"
+        >
+          <span aria-hidden="true">+</span>
+          Add cage
+        </button>
+      }
+      <!-- Add Strain button -->
+      @if (isStrainsPage) {
+        <button
+          type="button"
+          class="primary-button"
+          [disabled]="showStrainForm() || loadingStrain()"
+          (click)="addStrain()"
+        >
+          + Add strain
+        </button>
+      }
+      <!-- Add Mouse button -->
+      @if (isMicePage) {
+        <button 
+          type="button" 
+          class="primary-button"
+          [disabled]="showMouseForm() || loadingMouse()" 
+          (click)="addMouse()">
+          + Add mouse
+        </button>
+      }
+      <!-- Refresh button -->
+      <button
+        type="button"
+        class="refresh-button"
+        [disabled]="loading()"
+        (click)="reload()"
+      >
+        Refresh
+      </button>
+    </div>
+  </header>
+  
+  <!-- Forms for adding/editing Rooms -->
+  @if (isRoomsPage) {
+    @if (loadingRoom()) {
+      <p role="status">Loading room details...</p>
+    }
+
+    @if (showRoomForm()) {
+      <div class="room-form-card">
+        <app-room-form
+          [room]="selectedRoom()"
+          (saved)="onRoomSaved()"
+          (cancelled)="closeRoomForm()"
+        ></app-room-form>
+      </div>
+    }
+  }
+  <!-- Forms for adding/editing Racks -->
+  @if (isRacksPage) {
+    @if (loadingRack()) {
+      <p role="status">Loading rack details...</p>
+    }
+
+    @if (showRackForm()) {
+      <div class="room-form-card">
+        <app-rack-form
+          [rack]="selectedRack()"
+          (saved)="onRackSaved()"
+          (cancelled)="closeRackForm()"
+        ></app-rack-form>
+      </div>
+    }
+  }
+  <!-- Forms for adding/editing Cages -->
+  @if (isCagesPage) {
+    @if (loadingCage()) {
+      <p role="status">Loading cage details...</p>
+    }
+
+    @if (showCageForm()) {
+      <div class="room-form-card">
+        <app-cage-form
+          [cage]="selectedCage()"
+          (saved)="onCageSaved()"
+          (cancelled)="closeCageForm()"
+        ></app-cage-form>
+      </div>
+    }
+  }
+  <!-- Forms for adding/editing Strains -->
+  @if (isStrainsPage) {
+    @if (strainMessage()) {
+      <div class="success-notice" role="status">
+        {{ strainMessage() }}
+      </div>
+    }
+
+    @if (loadingStrain()) {
+      <p role="status">Loading strain details...</p>
+    }
+
+    @if (showStrainForm()) {
+      <div class="room-form-card">
+        <app-strain-form
+          [strain]="selectedStrain()"
+          (saved)="onStrainSaved()"
+          (cancelled)="closeStrainForm()"
+        ></app-strain-form>
+      </div>
+    }
+  }
+  <!-- Forms for adding/editing Mice -->
+  @if (isMicePage) {
+    @if (mouseMessage()) {
+      <div class="success-notice" role="status">{{ mouseMessage() }}</div>
+    }
+    @if (loadingMouse()) {
+      <p role="status">Loading mouse details...</p>
+    }
+    @if (showMouseForm()) {
+      <div class="room-form-card">
+        <app-mouse-form [mouse]="selectedMouse()"
+                        (saved)="onMouseSaved()"
+                        (cancelled)="closeMouseForm()"></app-mouse-form>
+      </div>
+    }
+  }
+  
+  <!-- Table of records -->
+ <div class="records-card" [attr.aria-busy]="loading()">
+    <div class="toolbar">
+      <div class="search-field">
+        <label for="record-search">
+          Search {{ title() }}
+        </label>
+
+        <input
+          #searchInput
+          id="record-search"
+          type="search"
+          placeholder="Search records..."
+          [value]="search()"
+          (input)="search.set(searchInput.value)"
+        >
+      </div>
+
+      @if (statuses().length > 0) {
+        <div class="filter-field">
+          <label for="status-filter">Status</label>
+
+          <select
+            #statusInput
+            id="status-filter"
+            [value]="statusFilter()"
+            (change)="statusFilter.set(statusInput.value)"
+          >
+            <option value="">All statuses</option>
+
+            @for (status of statuses(); track status) {
+              <option [value]="status">
+                {{ status }}
+              </option>
+            }
+          </select>
+        </div>
+      }
+    </div>
+
+    @if (loading()) {
+      <div class="state" role="status">
+        Loading {{ title().toLowerCase() }}...
+      </div>
+    } @else if (error()) {
+      <div class="state error-state" role="alert">
+        <p>{{ error() }}</p>
+
+        <button type="button" (click)="reload()">
+          Try again
+        </button>
+      </div>
+    } @else if (rows().length === 0) {
+      <div class="state">
+        No {{ title().toLowerCase() }} have been added yet.
+      </div>
+    } @else if (filteredRows().length === 0) {
+      <div class="state">
+        No records match your search or filters.
+      </div>
+    } @else {
+      <p class="result-count" role="status">
+        Showing {{ filteredRows().length }} of
+        {{ rows().length }} records
+      </p>
+
+      <div
+        class="table-wrapper"
+        tabindex="0"
+        role="region"
+        [attr.aria-label]="title() + ' records'"
+      >
+        <table>
+          <caption class="visually-hidden">
+            {{ title() }} records
+          </caption>
+
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+
+              @for (column of columns(); track column.key) {
+                <th scope="col">
+                  {{ column.label }}
+                </th>
+              }
+
+              @if (
+                isRoomsPage ||
+                isRacksPage ||
+                isCagesPage ||
+                isStrainsPage
+              ) {
+                <th scope="col">Actions</th>
+              }
+
+              </tr>
+          </thead>
+
+          <tbody>
+            @for (row of filteredRows(); track row.id) {
+              <tr>
+                <td>{{ row.id }}</td>
+
+                @for (column of columns(); track column.key) {
+                  <td>
+                    @if (column.key === 'status') {
+                      <span class="status-badge">
+                        {{ row.values[column.key] }}
+                      </span>
+                    } @else {
+                      {{ row.values[column.key] || '—' }}
+                    }
+                  </td>
+                }
+                 <!-- Edit buttons for Rooms -->
+                @if (isRoomsPage) {
+                  <td>
+                    <button
+                      type="button"
+                      [disabled]="showRoomForm() || loadingRoom()"
+                      [attr.aria-label]="
+                        'Edit room ' + row.values['name']
+                      "
+                      (click)="editRoom(row.id)"
+                    >
+                      Edit
+                    </button>
+                  </td>
+                }
+                <!-- Edit buttons for Racks -->
+                @if (isRacksPage) {
+                  <td>
+                    <button
+                      type="button"
+                      [disabled]="showRackForm() || loadingRack()"
+                      [attr.aria-label]="'Edit rack ' + row.values['name']"
+                      (click)="editRack(row.id)"
+                    >
+                      Edit
+                    </button>
+                  </td>
+                }
+                <!-- Edit buttons for Cages -->
+                @if (isCagesPage) {
+                  <td>
+                    <button
+                      type="button"
+                      [disabled]="showCageForm() || loadingCage()"
+                      [attr.aria-label]="'Edit cage ' + row.values['name']"
+                      (click)="editCage(row.id)"
+                    >
+                      Edit
+                    </button>
+                  </td>
+                }
+                <!-- Edit buttons for Strains -->
+                @if (isStrainsPage) {
+                  <td>
+                    <button
+                      type="button"
+                      [disabled]="showStrainForm() || loadingStrain()"
+                      [attr.aria-label]="'Edit strain ' + row.values['name']"
+                      (click)="editStrain(row.id)"
+                    >
+                      Edit
+                    </button>
+                  </td>
+                }
+                <!-- Edit buttons for Mice -->
+                 @if (isMicePage) {
+                <td>
+                  <button type="button" (click)="editMouse(row.id)"
+                          [disabled]="showMouseForm() || loadingMouse()"
+                          [attr.aria-label]="'Edit mouse ' + row.values['identifier']">
+                    Edit
+                  </button>
+                </td>
+              }
+             </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</section>

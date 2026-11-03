@@ -1,0 +1,216 @@
+:host {
+  display: block;
+  color: #173c50;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+form {
+  width: 100%;
+}
+
+header {
+  margin-bottom: 26px;
+}
+
+header h2 {
+  margin: 0 0 8px;
+  color: #173c50;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+header p {
+  margin: 0;
+  color: #637b8b;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* Form fields */
+
+.field {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  color: #244b60;
+  font-size: 0.9rem;
+  font-weight: 650;
+}
+
+input,
+select {
+  display: block;
+  width: 100%;
+  min-height: 46px;
+  padding: 11px 14px;
+  border: 1px solid #cbdde6;
+  border-radius: 10px;
+  background: #f8fbfd;
+  color: #173c50;
+  font: inherit;
+  font-size: 0.95rem;
+  transition:
+    border-color 150ms ease,
+    background-color 150ms ease;
+}
+
+input::placeholder {
+  color: #728591;
+}
+
+input:hover:not(:disabled),
+select:hover:not(:disabled) {
+  border-color: #94b9c9;
+}
+
+input:focus,
+select:focus {
+  border-color: #087f94;
+  background: #fff;
+}
+
+input:focus-visible,
+select:focus-visible,
+button:focus-visible {
+  outline: 3px solid #087f94;
+  outline-offset: 3px;
+}
+
+input.ng-invalid.ng-touched,
+select.ng-invalid.ng-touched {
+  border-color: #b8423a;
+  background: #fff8f7;
+}
+
+input:disabled,
+select:disabled {
+  background: #edf2f5;
+  color: #657b89;
+  cursor: not-allowed;
+}
+
+/* Validation and feedback */
+
+.field-error {
+  margin: 7px 0 0;
+  color: #a33932;
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.field-error:empty {
+  display: none;
+}
+
+.field > p:not(.field-error) {
+  margin: 8px 0 12px;
+  color: #637b8b;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.error-notice,
+.field > div[role="alert"] {
+  margin-bottom: 18px;
+  padding: 14px 16px;
+  border: 1px solid #ecc8c4;
+  border-radius: 10px;
+  background: #fff4f2;
+  color: #a33932;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.field > div[role="alert"] p {
+  margin: 0 0 10px;
+}
+
+/* Buttons */
+
+button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 10px 18px;
+  border: 1px solid #cbdde6;
+  border-radius: 10px;
+  background: #fff;
+  color: #245267;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 650;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color 150ms ease,
+    border-color 150ms ease;
+}
+
+button:hover:not(:disabled) {
+  border-color: #94b9c9;
+  background: #eff8fa;
+}
+
+footer {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+  padding-top: 22px;
+  border-top: 1px solid #e3edf2;
+}
+
+footer button[type="submit"] {
+  border-color: #087f94;
+  background: #087f94;
+  color: #fff;
+}
+
+footer button[type="submit"]:hover:not(:disabled) {
+  border-color: #066879;
+  background: #066879;
+}
+
+footer .secondary {
+  background: #fff;
+  color: #35576a;
+}
+
+footer .secondary:hover:not(:disabled) {
+  background: #eff8fa;
+}
+
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* Mobile */
+
+@media (max-width: 480px) {
+  header h2 {
+    font-size: 1.3rem;
+  }
+
+  footer button {
+    flex: 1 1 120px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  input,
+  select,
+  button {
+    transition: none;
+  }
+}

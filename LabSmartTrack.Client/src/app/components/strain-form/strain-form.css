@@ -1,0 +1,167 @@
+:host {
+  display: block;
+  color: #173c50;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+header {
+  margin-bottom: 26px;
+}
+
+h2 {
+  margin: 0 0 8px;
+  font-size: 1.5rem;
+  letter-spacing: -0.02em;
+}
+
+header p {
+  margin: 0;
+  color: #637b8b;
+  line-height: 1.6;
+}
+
+.field {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+  font-weight: 650;
+}
+
+label > span:not(.optional) {
+  color: #a33932;
+}
+
+.optional {
+  color: #637b8b;
+  font-weight: 400;
+}
+
+input,
+textarea {
+  display: block;
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #cbdde6;
+  border-radius: 10px;
+  background: #f8fbfd;
+  color: #173c50;
+  font: inherit;
+  line-height: 1.5;
+}
+
+textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #728591;
+}
+
+input:focus,
+textarea:focus {
+  border-color: #087f94;
+  background: #fff;
+}
+
+input.ng-invalid.ng-touched,
+textarea.ng-invalid.ng-touched {
+  border-color: #b8423a;
+}
+
+input:disabled,
+textarea:disabled {
+  background: #edf2f5;
+  cursor: not-allowed;
+}
+
+.character-count {
+  margin: 7px 0 0;
+  color: #637b8b;
+  font-size: 0.78rem;
+  text-align: right;
+}
+
+.field-error {
+  margin-top: 6px;
+  color: #a33932;
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.field-error:empty {
+  display: none;
+}
+
+.error-notice {
+  margin-bottom: 20px;
+  padding: 14px 16px;
+  border: 1px solid #ecc8c4;
+  border-radius: 10px;
+  background: #fff4f2;
+  color: #a33932;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+footer {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+  padding-top: 22px;
+  border-top: 1px solid #e3edf2;
+}
+
+button {
+  min-height: 42px;
+  padding: 10px 18px;
+  border: 1px solid #cbdde6;
+  border-radius: 10px;
+  background: #fff;
+  color: #245267;
+  font: inherit;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.primary {
+  border-color: #087f94;
+  background: #087f94;
+  color: #fff;
+}
+
+.primary:hover:not(:disabled) {
+  background: #066879;
+}
+
+.secondary:hover:not(:disabled) {
+  background: #eff8fa;
+}
+
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+input:focus-visible,
+textarea:focus-visible,
+button:focus-visible {
+  outline: 3px solid #087f94;
+  outline-offset: 3px;
+}
+
+@media (max-width: 480px) {
+  footer button {
+    flex: 1;
+  }
+}

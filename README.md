@@ -2,7 +2,7 @@
 
 ### Author: Kailine Lima
 
-####     Milestone 1 — .NET and Angular Foundation
+- [Milestone 1: .NET and Angular Foundation](docs/milestones/milestone-1-foundation.md)
 - Create the .NET solution.
 - Create the ASP.NET Core Web API.
 - Create the Angular application.

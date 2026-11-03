@@ -1,0 +1,74 @@
+<section class="dashboard-heading">
+  <div>
+    <span class="eyebrow">Good morning, team</span>
+    <h1>Colony overview</h1>
+    <p>A focused view of your active breeding colony and scheduled follow-ups.</p>
+  </div>
+  <section
+    class="api-status"
+    [class.online]="apiStatus() === 'online'"
+    [class.offline]="apiStatus() === 'offline'"
+    [class.checking]="apiStatus() === 'checking'"
+    aria-live="polite"
+    >
+    <span class="api-status-dot" aria-hidden="true"></span>
+
+    <div>
+        <strong>API status</strong>
+        <p>{{ apiMessage() }}</p>
+    </div>
+
+    @if (apiStatus() === 'offline') {
+        <button type="button" (click)="checkApiHealth()">
+        Try again
+        </button>
+    }
+</section>
+
+  <button class="primary-button" type="button">
+    <span aria-hidden="true">＋</span> Create breeding pair
+  </button>
+</section>
+
+<section
+  class="summary-grid"
+  aria-label="Colony summary"
+>
+  <article class="summary-card">
+    <span class="card-label">Rooms</span>
+    <strong>0</strong>
+    <p>Registered laboratory rooms</p>
+  </article>
+
+  <article class="summary-card">
+    <span class="card-label">Cages</span>
+    <strong>0</strong>
+    <p>Active colony cages</p>
+  </article>
+
+  <article class="summary-card">
+    <span class="card-label">Mice</span>
+    <strong>0</strong>
+    <p>Animals currently registered</p>
+  </article>
+
+  <article class="summary-card attention-card">
+    <span class="card-label">Weaning Due</span>
+    <strong>0</strong>
+    <p>Litters requiring attention</p>
+  </article>
+</section>
+
+<section class="dashboard-panel">
+  <div>
+    <h3>Recent colony activity</h3>
+    <p>
+      Colony activity will appear here after the database
+      features are implemented.
+    </p>
+  </div>
+
+  <span class="status-badge">
+    Foundation milestone
+  </span>
+</section>

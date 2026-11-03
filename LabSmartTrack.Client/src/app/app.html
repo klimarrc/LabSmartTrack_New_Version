@@ -1,0 +1,59 @@
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-logo">LS</div>
+
+      <div>
+        <h1>LabSmartTrack</h1>
+        <span>Colony Management</span>
+      </div>
+    </div>
+
+   <nav aria-label="Main navigation">
+    <a routerLink="/dashboard" routerLinkActive="active">
+      Dashboard
+    </a>
+    <a routerLink="/facilities" routerLinkActive="active">
+      Facilities
+    </a>
+
+    <a routerLink="/rooms" routerLinkActive="active">
+      Rooms
+    </a>
+
+    <a routerLink="/racks" routerLinkActive="active">
+      Racks
+    </a>
+
+    <a routerLink="/cages" routerLinkActive="active">
+      Cages
+    </a>
+
+    <a routerLink="/strains" routerLinkActive="active">
+      Strains
+    </a>
+
+    <a routerLink="/mice" routerLinkActive="active">
+      Mice
+    </a>
+</nav>
+  </aside>
+
+  <div class="page">
+    <header class="topbar">
+      <div>
+        <strong>{{ title }}</strong>
+        <span>Research Colony</span>
+      </div>
+
+      <div class="profile">
+        <span class="avatar">KL</span>
+        <span>Staff User</span>
+      </div>
+    </header>
+
+    <main class="content">
+      <router-outlet />
+    </main>
+  </div>
+</div>
