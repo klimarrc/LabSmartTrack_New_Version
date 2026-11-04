@@ -1,0 +1,69 @@
+<section class="colony-page">
+  <h1>Create breeding pair</h1>
+  <p>Select the parents and the cage for this breeding record.</p>
+
+  @if (loading()) {
+    <p role="status">Loading available mice and cages…</p>
+  } @else if (loadError()) {
+    <p role="alert">{{ loadError() }}</p>
+    <button type="button" (click)="load()">Retry</button>
+  } @else {
+    @if (!sires().length || !dams().length || !cages().length) {
+      <p role="status">
+        An active male, an active female, and an existing cage are required.
+      </p>
+    }
+
+    <form [formGroup]="form" (ngSubmit)="save()">
+      <p>
+        <label for="breeding-code">Breeding code *</label>
+        <input id="breeding-code" formControlName="breedingCode"
+               required maxlength="50" placeholder="e.g. BP-001">
+      </p>
+
+      <p>
+        <label for="sire">Sire *</label>
+        <select id="sire" formControlName="sireId">
+          <option [ngValue]="0" disabled>Select an active male</option>
+          @for (m of sires(); track m.id) {
+            <option [ngValue]="m.id">{{ m.identifier }}</option>
+          }
+        </select>
+      </p>
+
+      <p>
+        <label for="dam">Dam *</label>
+        <select id="dam" formControlName="damId">
+          <option [ngValue]="0" disabled>Select an active female</option>
+          @for (m of dams(); track m.id) {
+            <option [ngValue]="m.id">{{ m.identifier }}</option>
+          }
+        </select>
+      </p>
+
+      <p>
+        <label for="breeding-cage">Cage *</label>
+        <select id="breeding-cage" formControlName="cageId">
+          <option [ngValue]="0" disabled>Select a cage</option>
+          @for (c of cages(); track c.id) {
+            <option [ngValue]="c.id">{{ c.cageNumber }} — {{ c.name }}</option>
+          }
+        </select>
+      </p>
+
+      <p>
+        <label for="start-date">Start date *</label>
+        <input id="start-date" type="date" formControlName="startDate"
+               required [attr.max]="today()">
+      </p>
+
+      @if (error()) { <p role="alert">{{ error() }}</p> }
+      @if (success()) { <p role="status">{{ success() }}</p> }
+
+      <button type="submit" [disabled]="form.invalid || saving()">
+        {{ saving() ? 'Saving…' : 'Create breeding pair' }}
+      </button>
+      <a routerLink="/dashboard">Back to dashboard</a>
+    </form>
+  }
+</section>

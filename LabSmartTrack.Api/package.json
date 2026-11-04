@@ -1,0 +1,10 @@
+{
+  "name": "labsmarttrack-api",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "dotnet run --project LabSmartTrack.Api.csproj",
+    "build": "dotnet build LabSmartTrack.Api.csproj",
+    "test": "dotnet test ../LabSmartTrack.Tests/LabSmartTrack.Tests.csproj"
+  }
+}

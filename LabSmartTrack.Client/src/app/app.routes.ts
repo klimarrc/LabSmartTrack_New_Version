@@ -58,9 +58,19 @@ export const routes: Routes = [
                 .then(module => module.ColonyList),
         title: 'Mice | LabSmartTrack',
         data: { entity: 'mice', title: 'Mice' },
+
     },
+    {
+        path: 'breeding-pairs/new',
+        loadComponent: () =>
+            import('./pages/breeding-pair-form/breeding-pair-form')
+                .then(m => m.BreedingPairForm),
+        title: 'Create breeding pair | LabSmartTrack',
+    },
+
     {
         path: '**',
         redirectTo: 'dashboard',
     },
+
 ];

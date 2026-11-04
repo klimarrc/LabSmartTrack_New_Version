@@ -22,6 +22,60 @@ namespace LabSmartTrack.Api.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("LabSmartTrack.Api.Models.BreedingPair", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("BreedingCode")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("CageId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DamId")
+                        .HasColumnType("int");
+
+                    b.Property<DateOnly?>("EndDate")
+                        .HasColumnType("date");
+
+                    b.Property<int>("SireId")
+                        .HasColumnType("int");
+
+                    b.Property<DateOnly>("StartDate")
+                        .HasColumnType("date");
+
+                    b.Property<DateTime>("UpdatedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BreedingCode")
+                        .IsUnique()
+                        .HasDatabaseName("UX_BreedingPairs_BreedingCode");
+
+                    b.HasIndex("CageId");
+
+                    b.HasIndex("DamId");
+
+                    b.HasIndex("SireId");
+
+                    b.ToTable("BreedingPairs", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_BreedingPairs_DateOrder", "[EndDate] IS NULL OR [EndDate] >= [StartDate]");
+
+                            t.HasCheckConstraint("CK_BreedingPairs_DifferentMice", "[SireId] <> [DamId]");
+                        });
+                });
+
             modelBuilder.Entity("LabSmartTrack.Api.Models.Cage", b =>
                 {
                     b.Property<int>("Id")
@@ -244,6 +298,33 @@ namespace LabSmartTrack.Api.Migrations
                         .IsUnique();
 
                     b.ToTable("Strains");
+                });
+
+            modelBuilder.Entity("LabSmartTrack.Api.Models.BreedingPair", b =>
+                {
+                    b.HasOne("LabSmartTrack.Api.Models.Cage", "Cage")
+                        .WithMany()
+                        .HasForeignKey("CageId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("LabSmartTrack.Api.Models.Mouse", "Dam")
+                        .WithMany()
+                        .HasForeignKey("DamId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("LabSmartTrack.Api.Models.Mouse", "Sire")
+                        .WithMany()
+                        .HasForeignKey("SireId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Cage");
+
+                    b.Navigation("Dam");
+
+                    b.Navigation("Sire");
                 });
 
             modelBuilder.Entity("LabSmartTrack.Api.Models.Cage", b =>

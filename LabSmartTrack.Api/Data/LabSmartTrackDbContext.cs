@@ -29,10 +29,45 @@ public sealed class LabSmartTrackDbContext : DbContext
     public DbSet<Mouse> Mice =>
         Set<Mouse>();
 
+    public DbSet<BreedingPair> BreedingPairs => Set<BreedingPair>();
+
     protected override void OnModelCreating(
         ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<BreedingPair>(pair =>
+        {
+            pair.ToTable("BreedingPairs", table =>
+            {
+                table.HasCheckConstraint(
+                    "CK_BreedingPairs_DifferentMice",
+                    "[SireId] <> [DamId]");
+
+                table.HasCheckConstraint(
+                    "CK_BreedingPairs_DateOrder",
+                    "[EndDate] IS NULL OR [EndDate] >= [StartDate]");
+            });
+
+            pair.HasIndex(p => p.BreedingCode)
+                .IsUnique()
+                .HasDatabaseName("UX_BreedingPairs_BreedingCode");
+
+            pair.HasOne(p => p.Sire)
+                .WithMany()
+                .HasForeignKey(p => p.SireId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            pair.HasOne(p => p.Dam)
+                .WithMany()
+                .HasForeignKey(p => p.DamId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            pair.HasOne(p => p.Cage)
+                .WithMany()
+                .HasForeignKey(p => p.CageId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
 
         modelBuilder.Entity<Facility>()
             .HasIndex(facility => facility.Name)
@@ -95,14 +130,9 @@ public sealed class LabSmartTrackDbContext : DbContext
             .WithMany(strain => strain.Mice)
             .HasForeignKey(mouse => mouse.StrainId)
             .OnDelete(DeleteBehavior.Restrict);
-    }
 
-    public override int SaveChanges()
-    {
-        ApplyTimestamps();
-
-        return base.SaveChanges();
     }
+    
 
     public override Task<int> SaveChangesAsync(
         CancellationToken cancellationToken = default)

@@ -1,0 +1,12 @@
+{
+  "name": "labsmarttrack",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start:api": "dotnet run --project ./LabSmartTrack.Api/LabSmartTrack.Api.csproj --urls http://localhost:5122",
+    "start:client": "npm --prefix ./LabSmartTrack.Client start",
+    "build": "dotnet build ./LabSmartTrack.sln && npm --prefix ./LabSmartTrack.Client run build",
+    "test:api": "dotnet test ./LabSmartTrack.sln",
+    "test:client": "npm --prefix ./LabSmartTrack.Client test -- --watch=false"
+  }
+}

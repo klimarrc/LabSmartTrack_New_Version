@@ -1,0 +1,158 @@
+:host {
+  display: block;
+  min-width: 0;
+  color: #173c50;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.colony-page {
+  width: 100%;
+  max-width: 960px;
+  margin-inline: auto;
+  padding: clamp(16px, 3vw, 36px);
+}
+
+h1 {
+  margin: 0 0 8px;
+  font-size: clamp(1.7rem, 3vw, 2.2rem);
+  line-height: 1.2;
+}
+
+h1 + p {
+  margin: 0 0 24px;
+  color: #536e7e;
+  line-height: 1.5;
+}
+
+/* One column by default; two when the page has enough room. */
+form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px;
+  padding: clamp(18px, 3vw, 30px);
+  border: 1px solid #d9e7ed;
+  border-top: 3px solid #087f94;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 6px 20px rgb(25 65 85 / 6%);
+}
+
+form > p {
+  min-width: 0;
+  margin: 0;
+}
+
+label {
+  display: block;
+  margin-bottom: 7px;
+  color: #244b60;
+  font-size: 0.9rem;
+  font-weight: 650;
+}
+
+input,
+select {
+  width: 100%;
+  min-width: 0;
+  min-height: 46px;
+  padding: 10px 12px;
+  border: 1px solid #b8ced9;
+  border-radius: 9px;
+  background: #f8fbfd;
+  color: #173c50;
+  font: inherit;
+}
+
+input:focus,
+select:focus {
+  border-color: #087f94;
+  background: #fff;
+}
+
+.ng-invalid.ng-touched:is(input, select) {
+  border-color: #b8423a;
+  background: #fff8f7;
+}
+
+input:disabled,
+select:disabled {
+  background: #edf2f5;
+  color: #637b8b;
+}
+
+/* Feedback spans the full form; a loading notice is not a success message. */
+[role="alert"],
+[role="status"] {
+  grid-column: 1 / -1;
+  padding: 12px 16px;
+  border-radius: 9px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+[role="alert"] {
+  background: #fff3f1;
+  color: #963b34;
+}
+
+.colony-page > [role="status"] {
+  background: #edf5f8;
+  color: #35576a;
+}
+
+form > [role="status"] {
+  background: #edf9f2;
+  color: #246147;
+}
+
+/* Submit and retry buttons */
+button {
+  min-height: 44px;
+  padding: 10px 18px;
+  border: 1px solid #076e81;
+  border-radius: 9px;
+  background: #076e81;
+  color: #fff;
+  font: inherit;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+button:hover:not(:disabled) {
+  background: #05596a;
+}
+
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+form > button,
+form > a {
+  grid-column: 1 / -1;
+  justify-self: start;
+}
+
+form > a {
+  color: #076e81;
+  text-underline-offset: 3px;
+}
+
+:where(input, select, button, a):focus-visible {
+  outline: 3px solid #07868d;
+  outline-offset: 3px;
+}
+
+@media (min-width: 720px) {
+  form {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* Breeding code sits above the paired Sire and Dam fields. */
+  form > p:first-child {
+    grid-column: 1 / -1;
+  }
+}

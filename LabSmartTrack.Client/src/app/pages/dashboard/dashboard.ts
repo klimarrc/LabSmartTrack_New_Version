@@ -1,3 +1,6 @@
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
+import { RouterLink } from '@angular/router';
 import {
   Component,
   inject,
@@ -10,12 +13,19 @@ import {
   HealthResponse,
 } from '../../services/api/api.service';
 
+interface DashboardSummary {
+  rooms: number;
+  activeCages: number;
+  mice: number;
+}
+
 @Component({
   selector: 'app-dashboard',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
+
 export class Dashboard implements OnInit {
   protected readonly apiStatus =
     signal<'checking' | 'online' | 'offline'>(
@@ -63,6 +73,22 @@ export class Dashboard implements OnInit {
         );
       },
     });
+  }
+
+  private readonly summaryHttp = inject(HttpClient);
+  readonly summary = signal<DashboardSummary | null>(null);
+  readonly summaryError = signal('');
+
+  loadSummary(): void {
+    this.summaryError.set('');
+    this.summary.set(null);
+
+    this.summaryHttp
+      .get<DashboardSummary>(`${environment.apiBaseUrl}/Dashboard/summary`)
+      .subscribe({
+        next: result => this.summary.set(result),
+        error: () => this.summaryError.set('Unable to load dashboard counts.'),
+      });
   }
 
   // Keep your existing dashboard properties below:
